@@ -27,7 +27,7 @@ class UsersController < ApplicationController
 
     def destroy
         @user = User.find(params[:id])
-        @user.destroy.   #.destroy is ruby syntax
+        @user.destroy   #.destroy is ruby syntax
         # redirect_to user_url
         render json: @user
     end

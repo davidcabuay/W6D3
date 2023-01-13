@@ -22,7 +22,7 @@ class ArtworksController < ApplicationController
 
     def destroy
         @artwork = Artwork.find(params[:id])
-        @artwork.destroy.   #.destroy is ruby syntax
+        @artwork.destroy   #.destroy is ruby syntax
         # redirect_to artwork_url
         render json: @artwork
     end
