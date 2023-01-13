@@ -26,4 +26,20 @@ class Artwork < ApplicationRecord
     has_many :shared_viewers,
         through: :artworks,
         source: :viewer
+
+    has_many :comments,
+        foreign_key: :artwork_id,
+        class_name: :Comment,
+        dependent: :destroy
+
+    def self.artworks_for_user_id(idee)
+        Artwork
+        .select(:title, :artist_id, :image_url, :artwork_id)
+        .joins(:artist)
+        .joins(:shared_viewers)
+        .group(:title, :artist_id, :image_url, :artwork_id) #if we want distinct titles with no repeats on views
+        .where("artworks.artist_id = ? OR artwork_shares.viewer_id = ?", idee, idee)
+    end
+
+
 end

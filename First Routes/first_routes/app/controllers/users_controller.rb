@@ -1,8 +1,12 @@
 class UsersController < ApplicationController
 
     def index
-        @user = User.all
-        render json: @user
+        if params[:query]
+            @users=User.where(username:params[:query])
+        else
+            @users = User.all
+        end
+        render json: @users
     end
     
     
@@ -13,15 +17,19 @@ class UsersController < ApplicationController
     end
 
     def create
-        @user = User.new(params.require(:users).permit(:name, :email))
-        @user.save!
-        render json: @user
+        @user = User.new(user_params)
+        if @user.save!
+            render json: @user
+        else
+            render json: @user.errors.full_messages, status: unprocessable_entitiy
+        end
     end
 
     def destroy
         @user = User.find(params[:id])
         @user.destroy.   #.destroy is ruby syntax
-        redirect_to user_url
+        # redirect_to user_url
+        render json: @user
     end
 
     def update
@@ -37,7 +45,7 @@ class UsersController < ApplicationController
     private 
 
 	def user_params
-			params.require(:users).permit(:name, :email)
+			params.require(:users).permit(:username)
 #only permitting param keys to params hash to come into server, ignore other param keys
 	end
 end
